@@ -10,11 +10,11 @@ public class Appointment {
     public LocalTime time;
     private boolean available;
 
-    public Appointment(/*String doctor_id,String doctor_name,*/LocalDate date,LocalTime time){
-       this.patient_id = null;
-       this.patient_name = null;
-        //this.doctor_id = doctor_id;
-        //this.doctor_name = doctor_name;
+    public Appointment(String doctor_id,String doctor_name,LocalDate date,LocalTime time){
+        this.patient_id = null;
+        this.patient_name = null;
+        this.doctor_id = doctor_id;
+        this.doctor_name = doctor_name;
         this.date = date;
         this.time = time;
         this.available = true;

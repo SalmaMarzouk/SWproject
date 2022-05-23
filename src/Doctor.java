@@ -7,9 +7,9 @@ import java.time.LocalTime;
 public class Doctor extends User{
     //date yyyy-MM-dd, time HH-mm-ss-ns
     public void add_appointment(LocalDate date, LocalTime time) throws Exception {
-        Statement stmt;
+        Statement stmt = null;
         Connection conn = DBConnection.getConnection();
-        Appointment a = new Appointment(date,time);
+        Appointment a = new Appointment(this.ID,this.name,date,time);
         try {
             stmt = conn.createStatement();
 
@@ -23,11 +23,14 @@ public class Doctor extends User{
                     true + "');";
 
             stmt.execute(sql);
-            stmt.close();
+           
         }
 
-        catch (SQLException err){
-            err.printStackTrace();
+        finally{
+        	 if(stmt != null) {
+            	 stmt.close();
+        	 }
+             conn.close();
         }
 
 

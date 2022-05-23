@@ -9,7 +9,7 @@ import java.sql.Connection;
 public class Receptionist extends User{
 
     public ArrayList<Appointment> view_empty_appointment() throws Exception {
-        Statement stmt;
+        Statement stmt = null;
         Connection conn = DBConnection.getConnection();
         ArrayList <Appointment> appointments = new ArrayList<>();
 
@@ -17,19 +17,21 @@ public class Receptionist extends User{
             stmt = conn.createStatement();
             String sql;
 
-            sql = "SELECT * FROM `clinic`.`Appointment` WHERE Available = 'True';";
+            sql = "SELECT * FROM `clinic`.`Appointment` WHERE Available = 'true';";
 
             ResultSet rs = stmt.executeQuery(sql);
 
             while (rs.next()) {
-                Appointment a = new Appointment(rs.getDate("Date").toLocalDate(),rs.getTime("Time").toLocalTime());
+                Appointment a = new Appointment(rs.getString("Doctor_id"),rs.getString("Doctor_name"),rs.getDate("Date").toLocalDate(),rs.getTime("Time").toLocalTime());
                 appointments.add(a);
             }
         }
 
         finally {
-            if (conn != null)
-                conn.close();
+            conn.close();
+            if(stmt != null) {
+            	stmt.close();
+            }
         }
 
         return appointments;
