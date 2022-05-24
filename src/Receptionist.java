@@ -8,6 +8,7 @@ import java.sql.Connection;
 
 public class Receptionist extends User{
 	
+	public Receptionist() {}
 	public Receptionist(String ID, String name) {
 		this.ID = ID;
 		this.name = name;
@@ -41,7 +42,10 @@ public class Receptionist extends User{
     }
 
     public boolean reserve_appointment(String doctor_id, LocalDate date, LocalTime time , String patient_id, String patient_name) throws Exception{
- 
+    	if(!patient_name.matches("[a-zA-Z]+")) {
+    		System.out.println("Invalid Name!!");
+    		return false;
+    	}
     	Statement stmt ;
     	Connection conn = DBConnection.getConnection();
         try {
@@ -52,6 +56,14 @@ public class Receptionist extends User{
             ResultSet rs = stmt.executeQuery(sql);
             rs.last();
             if(rs.getRow()!=0) {
+            	return false;
+            }
+            
+            sql = "SELECT * FROM clinic.Appointment WHERE Date =\'"+date+"\' and Time =\'"+time+"\' and Doctor_id = \'"+doctor_id+"\' ;";
+
+            rs = stmt.executeQuery(sql);
+            rs.last();
+            if(rs.getRow()==0) {
             	return false;
             }
 			sql = "SELECT * FROM clinic.Patient WHERE Id = \'"+ patient_id +"\';";
@@ -82,7 +94,10 @@ public class Receptionist extends User{
     }
 
     public boolean add_patient(String ID, String gender, String name, String age, String address) throws Exception {
-
+    	if(!name.matches("[a-zA-Z]+")) {
+    		System.out.println("Invalid Name!!");
+    		return false;
+    	}
         Statement stmt;
         Connection conn = DBConnection.getConnection();
 

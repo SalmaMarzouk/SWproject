@@ -5,13 +5,14 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 public class Doctor extends User{
+	public Doctor() {}
     //date yyyy-MM-dd, time HH-mm-ss-ns
 	public Doctor(String ID, String name) {
 		this.ID = ID;
 		this.name = name;
 	}
     public boolean add_appointment(LocalDate date, LocalTime time) throws Exception {
-    	if(date.isBefore(LocalDate.now())||time.isBefore(LocalTime.now())) {
+    	if(date.isBefore(LocalDate.now())||(date.equals(LocalDate.now())&&time.isBefore(LocalTime.now()))) {
     		return false;
     	}
         Statement stmt ;

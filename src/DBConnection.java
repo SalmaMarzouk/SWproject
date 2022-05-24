@@ -27,7 +27,7 @@ public class DBConnection {
     	User user = new User();
     	System.out.println(user.login("1","11"));
     	Doctor dr = (Doctor)user.get_user();
-    	LocalDate date = LocalDate.parse("2022-06-22");
+    	LocalDate date = LocalDate.parse("2022-06-25");
     	LocalTime time = LocalTime.parse("06:00:00");
     	//System.out.println(dr.add_appointment(date,time));
     	//receptionist
@@ -41,7 +41,9 @@ public class DBConnection {
     		System.out.println(p.doctor_id+"  "+p.doctor_name);
     	}
     	//System.out.println(res.add_patient("3", "f", "Sayd", "56", "Egypt"));
-    	//System.out.println(res.reserve_appointment("1",date,time,"3","Sayd"));
+    	//System.out.println(res.add_patient("44", "F", "Sayda", "22", "Egypt"));
+    	System.out.println(res.reserve_appointment("4",date,time,"3","Sayd")); //invalid Dr id
+    	System.out.println(res.reserve_appointment("1",date,time,"3","Sayd")); //invalid date
     }
     
 }
