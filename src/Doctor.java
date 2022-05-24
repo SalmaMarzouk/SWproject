@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 
 public class Doctor extends User{
+	public Doctor() {}
     //date yyyy-MM-dd, time HH-mm-ss-ns
 	public Doctor(String ID, String name) {
 		this.ID = ID;
