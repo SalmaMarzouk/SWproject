@@ -13,7 +13,8 @@ ID varchar(30) unique,
 Name varchar (30) ,
 Gender varchar(10) ,
 Age int CHECK (Age > 0),
-Address varchar(30)
+Address varchar(30),
+constraint gender_constraint check(Gender in ('F','M','Female','Male'))
 ); 
 create table Appointment (
 Patient_id varchar(30),
