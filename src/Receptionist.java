@@ -57,6 +57,14 @@ public class Receptionist extends User{
             if(rs.getRow()!=0) {
             	return false;
             }
+            
+            sql = "SELECT * FROM clinic.Appointment WHERE Date =\'"+date+"\' and Time =\'"+time+"\' and Doctor_id = \'"+doctor_id+"\' ;";
+
+            rs = stmt.executeQuery(sql);
+            rs.last();
+            if(rs.getRow()==0) {
+            	return false;
+            }
 			sql = "SELECT * FROM clinic.Patient WHERE Id = \'"+ patient_id +"\';";
 			rs = stmt.executeQuery(sql);
 			  rs.last();
