@@ -12,7 +12,7 @@ public class Doctor extends User{
 		this.name = name;
 	}
     public boolean add_appointment(LocalDate date, LocalTime time) throws Exception {
-    	if(date.isBefore(LocalDate.now())&&time.isBefore(LocalTime.now())) {
+    	if(date.isBefore(LocalDate.now())||(date.equals(LocalDate.now())&&time.isBefore(LocalTime.now()))) {
     		return false;
     	}
         Statement stmt ;
