@@ -26,6 +26,9 @@ public class Appointment {
     public void setAvailable(boolean available) {
         this.available = available;
     }
+    public boolean getAvailable() {
+        return this.available;
+    }
     public void setPatient_id(String patient_id) {
         this.patient_id = patient_id;
     }

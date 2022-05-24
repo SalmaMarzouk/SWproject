@@ -27,7 +27,7 @@ import javax.swing.JTextField;
 public class LogInWindow {
 
 	private JFrame frmClinicSystem;
-	private JTextField nameField;
+	private JTextField IDField;
 	private JPasswordField passwordField;
 
 	/**
@@ -75,21 +75,21 @@ public class LogInWindow {
 		label_1.setAlignment(Label.CENTER);
 		panel.add(label_1);
 		
-		JLabel lblName = new JLabel("Name");
-		lblName.setFont(new Font("Tahoma", Font.BOLD, 20));
-		lblName.setBounds(50, 150, 110, 36);
-		frmClinicSystem.getContentPane().add(lblName);
+		JLabel lblID = new JLabel("ID");
+		lblID.setFont(new Font("Tahoma", Font.BOLD, 20));
+		lblID.setBounds(50, 150, 110, 36);
+		frmClinicSystem.getContentPane().add(lblID);
 		
 		JLabel lblPassword = new JLabel("Password");
 		lblPassword.setFont(new Font("Tahoma", Font.BOLD, 20));
 		lblPassword.setBounds(50, 250, 110, 36);
 		frmClinicSystem.getContentPane().add(lblPassword);
 		
-		nameField = new JTextField();
-		nameField.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		nameField.setBounds(210, 150, 197, 36);
-		frmClinicSystem.getContentPane().add(nameField);
-		nameField.setColumns(10);
+		IDField = new JTextField();
+		IDField.setFont(new Font("Tahoma", Font.PLAIN, 18));
+		IDField.setBounds(210, 150, 197, 36);
+		frmClinicSystem.getContentPane().add(IDField);
+		IDField.setColumns(10);
 		
 		passwordField = new JPasswordField();
 		passwordField.setFont(new Font("Tahoma", Font.PLAIN, 17));
@@ -127,9 +127,9 @@ public class LogInWindow {
 		JButton btnLogIn = new JButton("Log in");
 		btnLogIn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				String name = nameField.getText();
+				String id = IDField.getText();
 				String password = passwordField.getText();
-				if(name.isEmpty()) {
+				if(id.isEmpty()) {
 					emptyid.setVisible(true);
 					emptyname1.setVisible(true);
 				}
@@ -145,24 +145,23 @@ public class LogInWindow {
 					emptypassword.setVisible(false);
 					emptypassword1.setVisible(false);
 				}
-				if(!name.isEmpty() && !password.isEmpty()) {
+				if(!id.isEmpty() && !password.isEmpty()) {
 					
 					User user = new User();
-					Boolean found = null;
+					boolean found = false;
 					try {
 						Connection conn = DBConnection.getConnection();
 						Statement stmt = conn.createStatement();
 						ResultSet rs = null;
 						String sql;
-						sql = "SELECT ID FROM clinic.User WHERE Name = \'"+ name +"\' and Password = \'"+password+"\' ;";
+						sql = "SELECT ID FROM clinic.User WHERE ID = \'"+ id +"\' and Password = \'"+password+"\' ;";
 			            rs = stmt.executeQuery(sql);
-			           // System.out.println(rs.next());
 			            
 			            if(rs.next()) {
 			            	
 			            	System.out.print("inside rs");
-			            String id = rs.getString(1);
-						found = user.login(id,password);
+			            String name = rs.getString(1);
+						found = user.login(id, password);
 						
 						//rs.last();
 			            
@@ -170,7 +169,7 @@ public class LogInWindow {
 			            conn.close();
 			            
 			            System.out.println("Name: "+name+", ID: "+id+", Pass: "+password );
-			            
+			           
 			            if(found && user.isDoctor) {
 							Doctor dr = new Doctor(id, name.toString());
 							DoctorWindow drWindow = new DoctorWindow(dr);
@@ -186,7 +185,7 @@ public class LogInWindow {
 						else {
 							JOptionPane.showMessageDialog(frmClinicSystem, found, "This user not found",
 									JOptionPane.ERROR_MESSAGE);
-							nameField.setText("");
+							IDField.setText("");
 							passwordField.setText("");
 						}
 			            
@@ -194,10 +193,10 @@ public class LogInWindow {
 			            else {
 			            	JOptionPane.showMessageDialog(frmClinicSystem, "Please enter correct "
 			            			+ "Name and Password", "Error",JOptionPane.ERROR_MESSAGE);
-							nameField.setText("");
+							IDField.setText("");
 							passwordField.setText("");
 			            }
-			            
+			           
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();

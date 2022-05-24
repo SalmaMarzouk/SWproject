@@ -295,7 +295,7 @@ public class DoctorWindow extends JFrame {
 								e1.printStackTrace();
 							}
 							if(reserved) {
-								JOptionPane.showConfirmDialog(null, "Appointment reserved successfully.");
+								JOptionPane.showMessageDialog(null, "Appointment reserved successfully.");
 							}	 
 							else {
 								JOptionPane.showMessageDialog(null, "Please enter correct data", 
