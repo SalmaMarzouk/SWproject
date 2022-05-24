@@ -41,7 +41,10 @@ public class Receptionist extends User{
     }
 
     public boolean reserve_appointment(String doctor_id, LocalDate date, LocalTime time , String patient_id, String patient_name) throws Exception{
- 
+    	if(!patient_name.matches("[a-zA-Z]+")) {
+    		System.out.println("Invalid Name!!");
+    		return false;
+    	}
     	Statement stmt ;
     	Connection conn = DBConnection.getConnection();
         try {
@@ -82,7 +85,10 @@ public class Receptionist extends User{
     }
 
     public boolean add_patient(String ID, String gender, String name, String age, String address) throws Exception {
-
+    	if(!name.matches("[a-zA-Z]+")) {
+    		System.out.println("Invalid Name!!");
+    		return false;
+    	}
         Statement stmt;
         Connection conn = DBConnection.getConnection();
 
