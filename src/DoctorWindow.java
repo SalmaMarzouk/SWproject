@@ -8,8 +8,11 @@ import com.toedter.calendar.JDateChooser;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -231,19 +234,62 @@ public class DoctorWindow extends JFrame {
 					
 				save.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
-								
+						
+						
+						if(date.getDate() == null || timeSpinner.getValue() == null) {
+							JOptionPane.showMessageDialog(null, "Please enter full data", 
+									"Error Message", JOptionPane.ERROR_MESSAGE);
+						}
+						else {
 						boolean expired = date.getDate().before(new Date());
+						//System.out.println(date.getDate());
+						//System.out.println(date.getDate().before(new Date()));
 						if(expired) {
 								JOptionPane.showMessageDialog(null, "This date id not valid, Please choose another one.", "Error Message", JOptionPane.ERROR_MESSAGE);
 						}
-
 						
-						if(!expired && timeSpinner.getValue().toString() != null && date.getDate().toString() != null) {
-							LocalDate localdate = LocalDate.parse(date.toString());
-							LocalTime localtime = LocalTime.parse(timeSpinner.toString());
+						else {
+							//DateTimeFormatter df = DateTimeFormatter.ofPattern("MMM dd, yyyy");
+							//LocalTime localtime = LocalTime.parse(timeSpinner.toString(), df);
+							String year = Integer.toString(date.getDate().getYear()+1900);
+							String month = Integer.toString(date.getDate().getMonth()+1);
+							String day = Integer.toString(date.getDate().getDay());
+							System.out.println(date.getDate().getDay());
+							System.out.println(date.getDate().getMonth());
+							if(date.getDate().getMonth() == 1 || date.getDate().getMonth() == 2 || date.getDate().getMonth() == 3 || date.getDate().getMonth() == 4 ||
+									date.getDate().getMonth() == 5 || date.getDate().getMonth() == 6 || date.getDate().getMonth() == 7 || date.getDate().getMonth() == 8 || date.getDate().getMonth() == 9) {
+								month = "0" + month;
+							}
+							Calendar c = Calendar.getInstance();
+							c.setTime(d);
+							day = Integer.toString(c.get(Calendar.DAY_OF_MONTH));
+									
+							LocalDate localdate = LocalDate.parse(year +"-"+ month +"-"+ day);
+							System.out.println(localdate);
+
+							System.out.println(timeSpinner.getValue());
+
+							
+							System.out.println("day = " + c.get(Calendar.DAY_OF_MONTH));
+							System.out.println("month = "+month);
+							
+							Object obj = timeSpinner.getValue();
+							LocalTime thetime = LocalTime.now();
+							if (obj instanceof java.util.Date) {
+							    Date theDate = (java.util.Date) obj;
+							    Instant inst = theDate.toInstant();
+							    ZoneId theZone = java.time.ZoneId.systemDefault();
+							    thetime = java.time.LocalTime.ofInstant(inst, theZone); // Since JDK 9
+							    /*
+							    LocalTime.from(ZonedDateTime.ofInstant(inst, theZone)); // Since JDK 8
+							     */
+							    System.out.println("Time "+ thetime);
+							}
+							
 							boolean reserved = false;
 							try {
-								reserved = dr.add_appointment(localdate, localtime);
+								reserved = dr.add_appointment(localdate, thetime);
+								System.out.print(reserved);
 							} catch (Exception e1) {
 								// TODO Auto-generated catch block
 								e1.printStackTrace();
@@ -257,7 +303,7 @@ public class DoctorWindow extends JFrame {
 							}
 
 						}
-																		
+						}											
 						}
 					});
 						

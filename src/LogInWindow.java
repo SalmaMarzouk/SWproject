@@ -5,11 +5,14 @@ import java.awt.Label;
 import java.awt.Panel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.Connection;
+import java.sql.ResultSet;
 /*import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;*/
 import java.sql.SQLException;
+import java.sql.Statement;
 
 /*import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;*/
@@ -65,35 +68,35 @@ public class LogInWindow {
 		panel.setForeground(Color.BLACK);
 		panel.setFont(new Font("Dialog", Font.BOLD | Font.ITALIC, 35));
 		panel.setBackground(new Color(204, 153, 153));
-		panel.setBounds(0, 0, 510, 131);
+		panel.setBounds(0, 0, 510, 70);
 		frmClinicSystem.getContentPane().add(panel);
 		
 		Label label_1 = new Label("Clinic System");
 		label_1.setAlignment(Label.CENTER);
 		panel.add(label_1);
 		
-		JLabel lblID = new JLabel("Username");
-		lblID.setFont(new Font("Tahoma", Font.BOLD, 20));
-		lblID.setBounds(29, 191, 110, 36);
-		frmClinicSystem.getContentPane().add(lblID);
+		JLabel lblName = new JLabel("Name");
+		lblName.setFont(new Font("Tahoma", Font.BOLD, 20));
+		lblName.setBounds(50, 150, 110, 36);
+		frmClinicSystem.getContentPane().add(lblName);
 		
 		JLabel lblPassword = new JLabel("Password");
 		lblPassword.setFont(new Font("Tahoma", Font.BOLD, 20));
-		lblPassword.setBounds(29, 286, 110, 36);
+		lblPassword.setBounds(50, 250, 110, 36);
 		frmClinicSystem.getContentPane().add(lblPassword);
 		
 		nameField = new JTextField();
 		nameField.setFont(new Font("Tahoma", Font.PLAIN, 18));
-		nameField.setBounds(193, 191, 197, 36);
+		nameField.setBounds(210, 150, 197, 36);
 		frmClinicSystem.getContentPane().add(nameField);
 		nameField.setColumns(10);
 		
 		passwordField = new JPasswordField();
 		passwordField.setFont(new Font("Tahoma", Font.PLAIN, 17));
-		passwordField.setBounds(193, 286, 197, 36);
+		passwordField.setBounds(210, 250, 197, 36);
 		frmClinicSystem.getContentPane().add(passwordField);
 		
-		final JLabel emptyid = new JLabel("Enter your username");
+		final JLabel emptyid = new JLabel("Enter your ID");
 		emptyid.setForeground(Color.RED);
 		emptyid.setFont(new Font("Tahoma", Font.PLAIN, 16));
 		emptyid.setBounds(203, 243, 176, 20);
@@ -124,9 +127,9 @@ public class LogInWindow {
 		JButton btnLogIn = new JButton("Log in");
 		btnLogIn.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent arg0) {
-				String id = nameField.getText();
+				String name = nameField.getText();
 				String password = passwordField.getText();
-				if(id.isEmpty()) {
+				if(name.isEmpty()) {
 					emptyid.setVisible(true);
 					emptyname1.setVisible(true);
 				}
@@ -142,36 +145,71 @@ public class LogInWindow {
 					emptypassword.setVisible(false);
 					emptypassword1.setVisible(false);
 				}
-				if(!id.isEmpty() && !password.isEmpty()) {
+				if(!name.isEmpty() && !password.isEmpty()) {
 					
 					User user = new User();
 					Boolean found = null;
-					found = user.login(id,password);
-
-					if(found && user.isDoctor) {
-						Doctor dr = new Doctor();
-						DoctorWindow drWindow = new DoctorWindow(dr);
-						frmClinicSystem.setVisible(false);
+					try {
+						Connection conn = DBConnection.getConnection();
+						Statement stmt = conn.createStatement();
+						ResultSet rs = null;
+						String sql;
+						sql = "SELECT ID FROM clinic.User WHERE Name = \'"+ name +"\' and Password = \'"+password+"\' ;";
+			            rs = stmt.executeQuery(sql);
+			           // System.out.println(rs.next());
+			            
+			            if(rs.next()) {
+			            	
+			            	System.out.print("inside rs");
+			            String id = rs.getString(1);
+						found = user.login(id,password);
+						
+						//rs.last();
+			            
+			            stmt.close();
+			            conn.close();
+			            
+			            System.out.println("Name: "+name+", ID: "+id+", Pass: "+password );
+			            
+			            if(found && user.isDoctor) {
+							Doctor dr = new Doctor(id, name.toString());
+							DoctorWindow drWindow = new DoctorWindow(dr);
+							frmClinicSystem.setVisible(false);
+						}
+						
+						else if (found && !user.isDoctor)  {
+							Receptionist recep = new Receptionist(id, name.toString());
+							ReceptionistWindow recepWindow = new ReceptionistWindow(recep);
+							frmClinicSystem.setVisible(false);
+						}
+						
+						else {
+							JOptionPane.showMessageDialog(frmClinicSystem, found, "This user not found",
+									JOptionPane.ERROR_MESSAGE);
+							nameField.setText("");
+							passwordField.setText("");
+						}
+			            
+			            }
+			            else {
+			            	JOptionPane.showMessageDialog(frmClinicSystem, "Please enter correct "
+			            			+ "Name and Password", "Error",JOptionPane.ERROR_MESSAGE);
+							nameField.setText("");
+							passwordField.setText("");
+			            }
+			            
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
 					}
 					
-					else if (found && !user.isDoctor)  {
-						Receptionist recep = new Receptionist();
-						ReceptionistWindow recepWindow = new ReceptionistWindow(recep);
-						frmClinicSystem.setVisible(false);
-					}
-					
-					else {
-						JOptionPane.showMessageDialog(frmClinicSystem, found, "Error", JOptionPane.ERROR_MESSAGE);
-						nameField.setText("");
-						passwordField.setText("");
-					}
 				}
 			}
 		});
 		btnLogIn.setFont(new Font("Tahoma", Font.BOLD, 28));
 		btnLogIn.setBackground(new Color(204, 204, 255));
 		btnLogIn.setForeground(new Color(0, 0, 0));
-		btnLogIn.setBounds(147, 381, 146, 43);
+		btnLogIn.setBounds(147, 350, 146, 43);
 		frmClinicSystem.getContentPane().add(btnLogIn);
 		
 	}

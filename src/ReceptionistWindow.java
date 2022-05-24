@@ -13,8 +13,10 @@ import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -206,7 +208,7 @@ public class ReceptionistWindow extends JFrame {
 					}
 				});
 				
-				JLabel logOutPic = new JLabel(new ImageIcon(this.getClass().getResource("/logut.jpg")));
+				JLabel logOutPic = new JLabel(new ImageIcon(this.getClass().getResource("/logout.jpg")));
 				panel.add(logOutPic, "13, 2, right, center");
 				btnNewButton.setBackground(new Color(204, 204, 255));
 				btnNewButton.setFont(new Font("Tahoma", Font.BOLD, 18));
@@ -231,7 +233,10 @@ public class ReceptionistWindow extends JFrame {
 					
 				} catch (Exception e1) {
 					// TODO Auto-generated catch block
+					JOptionPane.showMessageDialog(null, "No Appointments.", 
+							"Error Message", JOptionPane.ERROR_MESSAGE);
 					e1.printStackTrace();
+
 				}
 			}
 		});
@@ -382,13 +387,29 @@ public class ReceptionistWindow extends JFrame {
 						
 						if(genderBox.getSelectedItem() != "Choose Gender" && !p_name.getText().isEmpty() && !p_age.getText().isEmpty() && !p_address.getText().isEmpty()) {
 							int max=1000, min=0;
-							double id = Math.random()*(max-min+1)+min;
-							Patient patient = new Patient(Double.toString(id), p_name.toString(), genderBox.getSelectedItem().toString(), p_age.toString(), p_address.toString());
-							/*boolean added = recep.addPatient(patient);
-							if(added) {
-								JOptionPane.showConfirmDialog(null, "Patient added successfully.");
+							int id = (int) (Math.random()*(max-min+1)+min);
+							//Patient patient = new Patient(Integer.toString(id), p_name.getText().toString(), genderBox.getSelectedItem().toString(), p_age.getText().toString(), p_address.getText().toString());
+							System.out.print(p_name.getText().toString());
+							System.out.println(p_address.getText().toString());
+							System.out.println(p_age.getText().toString());
+							System.out.println(Double.toString(id));
+							System.out.println(genderBox.getSelectedItem().toString());
+
+							boolean added;
+							try {
+								added = recep.add_patient(Integer.toString(id), genderBox.getItemAt(genderBox.getSelectedIndex()).toString(), p_name.toString(), p_age.toString(), p_address.toString());
+								System.out.print(added);
+								if(added) {
+									JOptionPane.showConfirmDialog(null, "Patient added successfully.");
+								}
+								
+							} catch (Exception e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+								JOptionPane.showMessageDialog(null, "Please enter correct data", 
+										"Error Message", JOptionPane.ERROR_MESSAGE);
 							}
-							*/
+							
 							 
 						}
 						else {
@@ -556,26 +577,61 @@ public class ReceptionistWindow extends JFrame {
 				save.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {
 						
+						if(date.getDate() == null || timeSpinner.getValue() == null) {
+							JOptionPane.showMessageDialog(null, "Please enter full data", 
+									"Error Message", JOptionPane.ERROR_MESSAGE);
+						}
+						else {
 						boolean expired = date.getDate().before(new Date());
 						if(expired) {
 								JOptionPane.showMessageDialog(null, "This date id not valid, Please choose another one.", "Error Message", JOptionPane.ERROR_MESSAGE);
 						}
-
-						
-						if(!expired && timeSpinner.getValue().toString() != null && !drid.getText().isEmpty() && !pid.getText().isEmpty() && !pname.getText().isEmpty()) {
-							LocalDate localdate = LocalDate.parse(date.toString());
-							LocalTime localtime = LocalTime.parse(timeSpinner.toString());
-							boolean reserved = recep.reserve_appointment(drid.getText().toString(), localdate, localtime, pid.toString());
-							if(reserved) {
-								JOptionPane.showConfirmDialog(null, "Appointment reserved successfully.");
-							}	 
-						}
 						else {
-							JOptionPane.showMessageDialog(null, "Please enter correct data", 
-									"Error Message", JOptionPane.ERROR_MESSAGE);
+							String year = Integer.toString(date.getDate().getYear()+1900);
+							String month = Integer.toString(date.getDate().getMonth()+1);
+							String day = Integer.toString(date.getDate().getDay());
+							if(date.getDate().getMonth() == 1 || date.getDate().getMonth() == 2 || date.getDate().getMonth() == 3 || date.getDate().getMonth() == 4 ||
+									date.getDate().getMonth() == 5 || date.getDate().getMonth() == 6 || date.getDate().getMonth() == 7 || date.getDate().getMonth() == 8 || date.getDate().getMonth() == 9) {
+								month = "0" + month;
+							}
+							Calendar c = Calendar.getInstance();
+							c.setTime(d);
+							day = Integer.toString(c.get(Calendar.DAY_OF_MONTH));
+									
+							LocalDate localdate = LocalDate.parse(year +"-"+ month +"-"+ day);
+							System.out.println(localdate);
+							
+							Object obj = timeSpinner.getValue();
+							LocalTime thetime = LocalTime.now();
+							if (obj instanceof java.util.Date) {
+							    Date theDate = (java.util.Date) obj;
+							    Instant inst = theDate.toInstant();
+							    ZoneId theZone = java.time.ZoneId.systemDefault();
+							    thetime = java.time.LocalTime.ofInstant(inst, theZone); // Since JDK 9
+							    /*
+							    LocalTime.from(ZonedDateTime.ofInstant(inst, theZone)); // Since JDK 8
+							     */
+							    System.out.println("Time "+ thetime);
+							}
+							
+							boolean reserved = false;
+							try {
+								reserved = recep.reserve_appointment(drid.getText().toString(), localdate, thetime, pid.getText().toString(), pname.getText().toString());
+								if(reserved) {
+									JOptionPane.showConfirmDialog(null, "Appointment reserved successfully.");
+								}	 
+								else {
+									JOptionPane.showMessageDialog(null, "Please enter correct data", 
+											"Error Message", JOptionPane.ERROR_MESSAGE);
+								}
+							} catch (Exception e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+							
 						}
 						
-						
+						}
 					}
 				});
 				
