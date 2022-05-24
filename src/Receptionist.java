@@ -8,6 +8,7 @@ import java.sql.Connection;
 
 public class Receptionist extends User{
 	
+	public Receptionist() {}
 	public Receptionist(String ID, String name) {
 		this.ID = ID;
 		this.name = name;
