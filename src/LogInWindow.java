@@ -154,14 +154,15 @@ public class LogInWindow {
 						Statement stmt = conn.createStatement();
 						ResultSet rs = null;
 						String sql;
-						sql = "SELECT ID FROM clinic.User WHERE ID = \'"+ id +"\' and Password = \'"+password+"\' ;";
+						sql = "SELECT Name FROM clinic.User WHERE ID = \'"+ id +"\' and Password = \'"+password+"\' ;";
 			            rs = stmt.executeQuery(sql);
 			            
 			            if(rs.next()) {
 			            	
-			            	System.out.print("inside rs");
-			            String name = rs.getString(1);
+			            	System.out.print("inside rs ");
+			            String name = rs.getString("Name");
 						found = user.login(id, password);
+		            	System.out.print(name);
 						
 						//rs.last();
 			            

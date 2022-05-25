@@ -245,7 +245,7 @@ public class DoctorWindow extends JFrame {
 						//System.out.println(date.getDate());
 						//System.out.println(date.getDate().before(new Date()));
 						if(expired) {
-								JOptionPane.showMessageDialog(null, "This date id not valid, Please choose another one.", "Error Message", JOptionPane.ERROR_MESSAGE);
+								JOptionPane.showMessageDialog(null, "This date is not valid, Please choose another one.", "Error Message", JOptionPane.ERROR_MESSAGE);
 						}
 						
 						else {
@@ -256,8 +256,8 @@ public class DoctorWindow extends JFrame {
 							String day = Integer.toString(date.getDate().getDay());
 							System.out.println(date.getDate().getDay());
 							System.out.println(date.getDate().getMonth());
-							if(date.getDate().getMonth() == 1 || date.getDate().getMonth() == 2 || date.getDate().getMonth() == 3 || date.getDate().getMonth() == 4 ||
-									date.getDate().getMonth() == 5 || date.getDate().getMonth() == 6 || date.getDate().getMonth() == 7 || date.getDate().getMonth() == 8 || date.getDate().getMonth() == 9) {
+							if( date.getDate().getMonth() == 2 || date.getDate().getMonth() == 3 || date.getDate().getMonth() == 4 ||
+									date.getDate().getMonth() == 5 || date.getDate().getMonth() == 6 || date.getDate().getMonth() == 7 || date.getDate().getMonth() == 8) {
 								month = "0" + month;
 							}
 							Calendar c = Calendar.getInstance();

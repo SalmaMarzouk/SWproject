@@ -288,14 +288,14 @@ public class ReceptionistWindow extends JFrame {
 							public void actionPerformed(ActionEvent e) {
 								
 								
-								if(genderBox.getSelectedItem() != "Choose Gender" && !p_name.getText().isEmpty() && !p_age.getText().isEmpty() && !p_address.getText().isEmpty()) {
+								if(genderBox.getSelectedItem() != "Choose Gender" && !p_name.getText().isEmpty() && !p_age.getText().isEmpty() && !p_address.getText().isEmpty() && !p_id.getText().isEmpty()) {
 									int max=1000, min=0;
 									int id = (int) (Math.random()*(max-min+1)+min);
 									//Patient patient = new Patient(Integer.toString(id), p_name.getText().toString(), genderBox.getSelectedItem().toString(), p_age.getText().toString(), p_address.getText().toString());
 									System.out.print(p_name.getText().toString());
 									System.out.println(p_address.getText().toString());
 									System.out.println(p_age.getText().toString());
-									System.out.println(Double.toString(id));
+									System.out.println(p_id.getText().toString());
 									System.out.println(genderBox.getSelectedItem().toString());
 
 									boolean added;
@@ -308,6 +308,7 @@ public class ReceptionistWindow extends JFrame {
 											p_name.setText("");
 											p_age.setText("");
 											p_address.setText("");
+											p_id.setText("");
 										}
 										
 									} catch (Exception e1) {
@@ -641,17 +642,20 @@ public class ReceptionistWindow extends JFrame {
 								"Error Message", JOptionPane.ERROR_MESSAGE);
 					}
 					else {
-					String[] titles = {"Patient Id", "Patient Name", "Doctor Id", "Doctor Name", "Date", "Time", "Available"};
-					String[][] arr = new String[empty_appointments.size()][7] ;
+					String[] titles = {"Doctor Id", "Doctor Name", "Date", "Time"};
+					String[][] arr = new String[empty_appointments.size()][4] ;
 					//empty_appointments.stream().map(u -> empty_appointments.toArray(new String[empty_appointments.size()])).toArray(String[][]::new);
 					for(int i = 0; i <empty_appointments.size(); i++) {
-						arr[i][0] = empty_appointments.get(i).patient_id;
-						arr[i][1] = empty_appointments.get(i).patient_name;
-						arr[i][2] = empty_appointments.get(i).doctor_id;
-						arr[i][3] = empty_appointments.get(i).doctor_name;
-						arr[i][4] = empty_appointments.get(i).date.toString();
-						arr[i][5] = empty_appointments.get(i).time.toString();
-						arr[i][6] = Boolean.toString(empty_appointments.get(i).getAvailable());						
+						//arr[i][0] = empty_appointments.get(i).patient_id;
+						//arr[i][1] = empty_appointments.get(i).patient_name;
+						arr[i][0] = empty_appointments.get(i).doctor_id;
+						arr[i][1] = empty_appointments.get(i).doctor_name;
+						arr[i][2] = empty_appointments.get(i).date.toString();
+						arr[i][3] = empty_appointments.get(i).time.toString();
+						//arr[i][6] = Boolean.toString(empty_appointments.get(i).getAvailable());	
+						System.out.print(arr[i][0]);
+						System.out.print(arr[i][1]);
+						
 					}
 					//frame.setDefaultCloseOperation(DISPOSE_ON_CLOSE);
 					JTable table = new JTable(arr, titles);
