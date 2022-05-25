@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -66,7 +67,7 @@ public class ReceptionistWindow extends JFrame {
 	}
 	
 */	
-	public ReceptionistWindow/*initialize*/(/*final DBConnection conn, */final Receptionist recep/**/)/* throws SQLException*/ {
+	public ReceptionistWindow/*initialize*/(/*final DBConnection conn, */final Receptionist recep/**/) throws SQLException {
 		
 		//frmClinicSystem = new JFrame();
 		/*frmClinicSystem.*/setTitle("Clinic System");
@@ -210,7 +211,14 @@ public class ReceptionistWindow extends JFrame {
 						back.addActionListener(new ActionListener() {
 							public void actionPerformed(ActionEvent arg0) {
 								frame.setVisible(false);
-								ReceptionistWindow recepW = new ReceptionistWindow(recep);
+								try {
+									ReceptionistWindow recepW = new ReceptionistWindow(recep);
+								} catch (SQLException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+									JOptionPane.showMessageDialog(null, "Please enter correct data", 
+											"Error Message", JOptionPane.ERROR_MESSAGE);
+								}
 							}
 						});
 						back.setBackground(new Color(204, 153, 153));
@@ -287,7 +295,7 @@ public class ReceptionistWindow extends JFrame {
 						save.addActionListener(new ActionListener() {
 							public void actionPerformed(ActionEvent e) {
 								
-								
+								boolean added = false;
 								if(genderBox.getSelectedItem() != "Choose Gender" && !p_name.getText().isEmpty() && !p_age.getText().isEmpty() && !p_address.getText().isEmpty() && !p_id.getText().isEmpty()) {
 									int max=1000, min=0;
 									int id = (int) (Math.random()*(max-min+1)+min);
@@ -298,7 +306,6 @@ public class ReceptionistWindow extends JFrame {
 									System.out.println(p_id.getText().toString());
 									System.out.println(genderBox.getSelectedItem().toString());
 
-									boolean added;
 									try {
 										added = recep.add_patient(Integer.toString(id), genderBox.getItemAt(genderBox.getSelectedIndex()).toString(), p_name.getText().toString(),
 												p_age.getText().toString(), p_address.getText().toString());
@@ -313,11 +320,14 @@ public class ReceptionistWindow extends JFrame {
 										
 									} catch (Exception e1) {
 										// TODO Auto-generated catch block
+										System.out.print("here");
 										e1.printStackTrace();
+										
+									}
+									if(!added) {
 										JOptionPane.showMessageDialog(null, "Please enter correct data", 
 												"Error Message", JOptionPane.ERROR_MESSAGE);
 									}
-									
 									 
 								}
 								else {
@@ -408,7 +418,14 @@ public class ReceptionistWindow extends JFrame {
 						back.addActionListener(new ActionListener() {
 							public void actionPerformed(ActionEvent arg0) {
 								frame.setVisible(false);
-								ReceptionistWindow recepW = new ReceptionistWindow(recep);
+								try {
+									ReceptionistWindow recepW = new ReceptionistWindow(recep);
+								} catch (SQLException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
+									JOptionPane.showMessageDialog(null, "Please enter correct data", 
+											"Error Message", JOptionPane.ERROR_MESSAGE);
+								}
 							}
 						});
 						back.setBackground(new Color(204, 153, 153));
@@ -484,7 +501,7 @@ public class ReceptionistWindow extends JFrame {
 					
 						save.addActionListener(new ActionListener() {
 							public void actionPerformed(ActionEvent e) {
-								
+								boolean reserved = false;
 								if(date.getDate() == null || timeSpinner.getValue() == null) {
 									JOptionPane.showMessageDialog(null, "Please enter full data", 
 											"Error Message", JOptionPane.ERROR_MESSAGE);
@@ -525,7 +542,6 @@ public class ReceptionistWindow extends JFrame {
 									}
 									else {
 									
-										boolean reserved = false;
 										try {
 											reserved = recep.reserve_appointment(drid.getText().toString(), localdate, thetime, pid.getText().toString(), pname.getText().toString());
 											System.out.println(reserved);
@@ -542,7 +558,10 @@ public class ReceptionistWindow extends JFrame {
 										}
 									
 									}
-								
+									if(!reserved) {
+										JOptionPane.showMessageDialog(null, "Please enter correct data", 
+												"Error Message", JOptionPane.ERROR_MESSAGE);
+									}
 								}
 							}
 						});

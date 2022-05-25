@@ -256,7 +256,7 @@ public class DoctorWindow extends JFrame {
 							String day = Integer.toString(date.getDate().getDay());
 							System.out.println(date.getDate().getDay());
 							System.out.println(date.getDate().getMonth());
-							if( date.getDate().getMonth() == 2 || date.getDate().getMonth() == 3 || date.getDate().getMonth() == 4 ||
+							if(date.getDate().getMonth() == 0 || date.getDate().getMonth() == 1 || date.getDate().getMonth() == 2 || date.getDate().getMonth() == 3 || date.getDate().getMonth() == 4 ||
 									date.getDate().getMonth() == 5 || date.getDate().getMonth() == 6 || date.getDate().getMonth() == 7 || date.getDate().getMonth() == 8) {
 								month = "0" + month;
 							}
